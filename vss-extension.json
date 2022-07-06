@@ -1,0 +1,54 @@
+{
+    "manifestVersion": 1,
+    "id": "AzureDevOpsExtensions",
+    "publisher": "PUBLISHER",
+    "version": "0.0.1",
+    "name": "Azure DevoOps Extensions",
+    "description": "Conjunto de extensões personalizadas",
+    "public": false,
+    "icons": {
+        "default": "extension-logo.jpg"
+    },
+    "categories": ["Azure Boards"],
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    },
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "Widget",
+            "type": "ms.vss-dashboards-web.widget",
+            "targets": [
+                "ms.vss-dashboards-web.widget-catalog"
+            ],
+            "properties": {
+                "name": "Widget",
+                "description": "Widget personalizado",
+                "catalogIconUrl": "widget-logo.jpg",
+                "previewImageUrl": "widget-logo.jpg",
+                "uri": "widget.html",
+                "supportedSizes": [
+                    {
+                        "rowSpan": 1,
+                        "columnSpan": 2
+                    }
+                ],
+                "supportedScopes": [
+                    "project_team"
+                ]
+            }
+        }
+    ],
+    "files": [
+        { "path": "src", "addressable": true, "packagePath": "/" },
+
+        { "path": "node_modules/vss-web-extension-sdk/lib", "addressable": true, "packagePath": "/lib" }
+    ],
+    "scopes": ["vso.work"]
+}

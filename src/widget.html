@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>          
+    <script src="lib/VSS.SDK.min.js"></script>
+    <script>
+        VSS.init({
+            explicitNotifyLoaded: true,
+            usePlatformStyles: true
+        });
+
+        VSS.require([
+            "TFS/Dashboards/WidgetHelpers",
+            "VSS/Service",
+            "TFS/WorkItemTracking/RestClient"
+        ], 
+        function (WidgetHelpers, VSSService, TFSWorkItemTrackingRestClient) {
+            WidgetHelpers.IncludeWidgetStyles();
+            
+            VSS.register("Widget", function () {                
+                return {
+                    load: function (WidgetSettings) {
+                        var $content = $('#content');
+
+                        var witClient = VSSService.getCollectionClient(TFSWorkItemTrackingRestClient.WorkItemTrackingHttpClient);
+                        var projectId = VSS.getWebContext().project.id;
+
+                        var query = 
+                            "SELECT [System.Id] " +
+                            "FROM WorkItems " +
+                            "WHERE [System.WorkItemType] = 'User Story' " +
+                            "ORDER BY [ID]";
+
+                        witClient.queryByWiql({ query: query }, projectId).then((result) => {
+                            var workItemId = result.workItems[0].id;
+                            var fields = ["System.Title"];
+
+                            witClient.getWorkItems([workItemId], fields).then((items) => {
+                                $content.text(items[0].fields["System.Title"]);
+                            });
+                        });
+
+                        return WidgetHelpers.WidgetStatusHelper.Success();
+                    }
+                }
+            });
+
+            VSS.notifyLoadSucceeded();
+        });
+    </script>
+</head>
+<body>
+    <div class="widget">
+        <div class="title-area">
+            <div class="title">
+                <div class="inner-title" id="title">Title</div>
+                <div class="subtitle" id="sub-title">Subtitle</div>
+            </div>
+        </div>
+        <div class="content" id="content">
+            Content
+        </div>
+    </div>
+</body>
+</html>
